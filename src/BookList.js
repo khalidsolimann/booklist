@@ -1,32 +1,39 @@
 import React, { useState, useEffect } from "react";
 import * as BooksAPI from "./BooksAPI";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function BookList() {
   const [currentlyReading, setCurrentlyReading] = useState([]);
   const [wantToRead, setWantToRead] = useState([]);
   const [read, setRead] = useState([]);
+  const navigate = useNavigate();
 
   const getData = () => {
     BooksAPI.getAll().then((data) => {
-      //console.log(data);
+      console.log(data);
       Object.keys(data).forEach((key) => {
         let temp = [];
-      
         if (data[key].shelf === "currentlyReading") {
           temp = currentlyReading;
           temp.push(data[key]);
-          setCurrentlyReading(temp);
+          setCurrentlyReading([...temp]);
         } else if (data[key].shelf === "wantToRead") {
           temp = wantToRead;
           temp.push(data[key]);
-          setWantToRead(temp);
+          setWantToRead([...temp]);
         } else if (data[key].shelf === "read") {
-          temp = read;          
+          temp = read;
           temp.push(data[key]);
-          setRead(temp);
+          setRead([...temp]);
         }
       });
+    });
+  };
+
+  const onSelect = (e, book) => {
+    let shelf = e.target.value;
+    BooksAPI.update(book, shelf).then((data) => {
+      navigate(0);
     });
   };
 
@@ -59,7 +66,10 @@ function BookList() {
                             }}
                           ></div>
                           <div className="book-shelf-changer">
-                            <select defaultValue="currentlyReading">
+                            <select
+                              onChange={(e) => onSelect(e, book)}
+                              defaultValue="currentlyReading"
+                            >
                               <option value="move" disabled>
                                 Move to...
                               </option>
@@ -76,7 +86,11 @@ function BookList() {
                           {book.publishedDate.substring(0, 4)}
                         </div>
                         {book.authors.map((author) => {
-                          return <div className="book-authors">{author}</div>;
+                          return (
+                            <div className="book-authors" key={author}>
+                              {author}
+                            </div>
+                          );
                         })}
                       </div>
                     </li>
@@ -104,7 +118,10 @@ function BookList() {
                             }}
                           ></div>
                           <div className="book-shelf-changer">
-                            <select defaultValue="wantToRead">
+                            <select
+                              onChange={(e) => onSelect(e, book)}
+                              defaultValue="wantToRead"
+                            >
                               <option value="move" disabled>
                                 Move to...
                               </option>
@@ -121,7 +138,11 @@ function BookList() {
                           {book.publishedDate.substring(0, 4)}
                         </div>
                         {book.authors.map((author) => {
-                          return <div className="book-authors">{author}</div>;
+                          return (
+                            <div className="book-authors" key={author}>
+                              {author}
+                            </div>
+                          );
                         })}
                       </div>
                     </li>
@@ -149,7 +170,10 @@ function BookList() {
                             }}
                           ></div>
                           <div className="book-shelf-changer">
-                            <select defaultValue="read">
+                            <select
+                              onChange={(e) => onSelect(e, book)}
+                              defaultValue="read"
+                            >
                               <option value="move" disabled>
                                 Move to...
                               </option>
@@ -166,7 +190,11 @@ function BookList() {
                           {book.publishedDate.substring(0, 4)}
                         </div>
                         {book.authors.map((author) => {
-                          return <div className="book-authors">{author}</div>;
+                          return (
+                            <div className="book-authors" key={author}>
+                              {author}
+                            </div>
+                          );
                         })}
                       </div>
                     </li>
