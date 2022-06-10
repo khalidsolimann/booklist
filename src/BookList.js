@@ -10,7 +10,6 @@ function BookList() {
 
   const getData = () => {
     BooksAPI.getAll().then((data) => {
-      console.log(data);
       Object.keys(data).forEach((key) => {
         let temp = [];
         if (data[key].shelf === "currentlyReading") {
