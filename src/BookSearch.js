@@ -20,9 +20,7 @@ export default function BookSearch() {
 
   const onSelect = (e, book) => {
     let shelf = e.target.value;
-    BooksAPI.update(book, shelf).then(() => {
-      navigate(0);
-    });
+    BooksAPI.update(book, shelf);
   };
 
   return (
@@ -60,7 +58,9 @@ export default function BookSearch() {
                       <div className="book-shelf-changer">
                         <select
                           onChange={(e) => onSelect(e, book)}
-                          defaultValue="none"
+                          defaultValue={
+                            book.shelf !== undefined ? book.shelf : "none"
+                          }
                         >
                           <option value="move" disabled>
                             Move to...
