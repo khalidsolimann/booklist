@@ -1,20 +1,28 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import * as BooksAPI from "./BooksAPI";
 
 export default function BookSearch() {
+  const navigate = useNavigate();
   const [books, setBooks] = useState([]);
 
   const getData = (input) => {
-    if (input != "") {
+    if (input !== "") {
       BooksAPI.search(input, 20).then((data) => {
-        if (data.error == "empty query") {
+        if (data.error === "empty query") {
           return setBooks([]);
         }
 
         setBooks(data);
       });
     } else setBooks([]);
+  };
+
+  const onSelect = (e, book) => {
+    let shelf = e.target.value;
+    BooksAPI.update(book, shelf).then(() => {
+      navigate(0);
+    });
   };
 
   return (
@@ -35,7 +43,6 @@ export default function BookSearch() {
         <ol className="books-grid">
           {books &&
             books.map((book) => {
-              console.log(book.imageLinks);
               return (
                 <li key={book.id}>
                   <div className="book">
@@ -52,7 +59,7 @@ export default function BookSearch() {
                       ></div>
                       <div className="book-shelf-changer">
                         <select
-                          // onChange={(e) => onSelect(e, book)}
+                          onChange={(e) => onSelect(e, book)}
                           defaultValue="none"
                         >
                           <option value="move" disabled>
