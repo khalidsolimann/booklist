@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import * as BooksAPI from "./BooksAPI";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import BookCard from "./BookCard";
 
 function BookList() {
   const [currentlyReading, setCurrentlyReading] = useState([]);
   const [wantToRead, setWantToRead] = useState([]);
   const [read, setRead] = useState([]);
-  const navigate = useNavigate();
 
   const getData = () => {
     BooksAPI.getAll().then((data) => {
@@ -29,13 +29,6 @@ function BookList() {
     });
   };
 
-  const onSelect = (e, book) => {
-    let shelf = e.target.value;
-    BooksAPI.update(book, shelf).then((data) => {
-      navigate(0);
-    });
-  };
-
   useEffect(() => {
     getData();
   }, []);
@@ -52,47 +45,11 @@ function BookList() {
               <ol className="books-grid">
                 {currentlyReading.map((book) => {
                   return (
-                    <li key={book.id}>
-                      <div className="book">
-                        <div className="book-top">
-                          <div
-                            className="book-cover"
-                            style={{
-                              width: 128,
-                              height: 193,
-                              backgroundImage:
-                                "url(" + `${book.imageLinks.thumbnail}` + ")",
-                            }}
-                          ></div>
-                          <div className="book-shelf-changer">
-                            <select
-                              onChange={(e) => onSelect(e, book)}
-                              defaultValue="currentlyReading"
-                            >
-                              <option value="move" disabled>
-                                Move to...
-                              </option>
-                              <option value="currentlyReading">
-                                Currently Reading
-                              </option>
-                              <option value="wantToRead">Want to Read</option>
-                              <option value="read">Read</option>
-                              <option value="none">None</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div className="book-title">
-                          {book.publishedDate.substring(0, 4)}
-                        </div>
-                        {book.authors.map((author) => {
-                          return (
-                            <div className="book-authors" key={author}>
-                              {author}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </li>
+                    <BookCard
+                      key={book.id}
+                      book={book}
+                      defaultValue={"currenlyReading"}
+                    />
                   );
                 })}
               </ol>
@@ -104,47 +61,11 @@ function BookList() {
               <ol className="books-grid">
                 {wantToRead.map((book) => {
                   return (
-                    <li key={book.id}>
-                      <div className="book">
-                        <div className="book-top">
-                          <div
-                            className="book-cover"
-                            style={{
-                              width: 128,
-                              height: 193,
-                              backgroundImage:
-                                "url(" + `${book.imageLinks.thumbnail}` + ")",
-                            }}
-                          ></div>
-                          <div className="book-shelf-changer">
-                            <select
-                              onChange={(e) => onSelect(e, book)}
-                              defaultValue="wantToRead"
-                            >
-                              <option value="move" disabled>
-                                Move to...
-                              </option>
-                              <option value="currentlyReading">
-                                Currently Reading
-                              </option>
-                              <option value="wantToRead">Want to Read</option>
-                              <option value="read">Read</option>
-                              <option value="none">None</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div className="book-title">
-                          {book.publishedDate.substring(0, 4)}
-                        </div>
-                        {book.authors.map((author) => {
-                          return (
-                            <div className="book-authors" key={author}>
-                              {author}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </li>
+                    <BookCard
+                      key={book.id}
+                      book={book}
+                      defaultValue={"wantToRead"}
+                    />
                   );
                 })}
               </ol>
@@ -156,47 +77,7 @@ function BookList() {
               <ol className="books-grid">
                 {read.map((book) => {
                   return (
-                    <li key={book.id}>
-                      <div className="book">
-                        <div className="book-top">
-                          <div
-                            className="book-cover"
-                            style={{
-                              width: 128,
-                              height: 193,
-                              backgroundImage:
-                                "url(" + `${book.imageLinks.thumbnail}` + ")",
-                            }}
-                          ></div>
-                          <div className="book-shelf-changer">
-                            <select
-                              onChange={(e) => onSelect(e, book)}
-                              defaultValue="read"
-                            >
-                              <option value="move" disabled>
-                                Move to...
-                              </option>
-                              <option value="currentlyReading">
-                                Currently Reading
-                              </option>
-                              <option value="wantToRead">Want to Read</option>
-                              <option value="read">Read</option>
-                              <option value="none">None</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div className="book-title">
-                          {book.publishedDate.substring(0, 4)}
-                        </div>
-                        {book.authors.map((author) => {
-                          return (
-                            <div className="book-authors" key={author}>
-                              {author}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </li>
+                    <BookCard key={book.id} book={book} defaultValue={"read"} />
                   );
                 })}
               </ol>
