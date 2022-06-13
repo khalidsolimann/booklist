@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import * as BooksAPI from "./BooksAPI";
 
 export default function BookSearch() {
-  const navigate = useNavigate();
   const [books, setBooks] = useState([]);
 
   const getData = (input) => {
