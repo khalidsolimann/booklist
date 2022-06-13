@@ -36,6 +36,7 @@ export default function BookSearch() {
       let temp = [];
       Object.keys(data).map((one) => {
         temp.push(data[one]);
+        return true;
       });
       setData(temp);
     });
@@ -60,7 +61,7 @@ export default function BookSearch() {
         <ol className="books-grid">
           {books &&
             books.map((book) => {
-              let found = data.find((one) => one.id == book.id);
+              let found = data.find((one) => one.id === book.id);
               return (
                 <li key={book.id}>
                   <div className="book">
