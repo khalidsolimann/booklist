@@ -5,14 +5,16 @@ import * as BooksAPI from "./BooksAPI";
 export default function BookSearch() {
   const [books, setBooks] = useState([]);
   const [data, setData] = useState([]);
+  const [error, setError] = useState("");
 
   const getData = (input) => {
     if (input !== "") {
       BooksAPI.search(input, 20).then((data) => {
         if (data.error === "empty query") {
+          setError("Book Not Found");
           return setBooks([]);
         }
-
+        if (error !== "") setError("");
         setBooks(data);
       });
     } else setBooks([]);
@@ -59,6 +61,7 @@ export default function BookSearch() {
       </div>
       <div className="search-books-results">
         <ol className="books-grid">
+          {error && error}
           {books &&
             books.map((book) => {
               let found = data.find((one) => one.id === book.id);
