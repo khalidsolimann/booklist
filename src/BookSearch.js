@@ -17,6 +17,14 @@ export default function BookSearch() {
     } else setBooks([]);
   };
 
+  let timer;
+  let debounce = (fn, delay) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      fn();
+    }, delay);
+  };
+
   const onSelect = (e, book) => {
     let shelf = e.target.value;
     BooksAPI.update(book, shelf);
@@ -30,7 +38,8 @@ export default function BookSearch() {
         </Link>
         <div className="search-books-input-wrapper">
           <input
-            onChange={(e) => getData(e.target.value)}
+            onChange={(e) => debounce(() => getData(e.target.value), 500)}
+            // onChange={(e) => getData(e.target.value)}
             type="text"
             placeholder="Search by title or author"
           />
