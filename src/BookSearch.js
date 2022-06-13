@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import * as BooksAPI from "./BooksAPI";
 
 export default function BookSearch() {
   const [books, setBooks] = useState([]);
+  const [data, setData] = useState([]);
 
   const getData = (input) => {
     if (input !== "") {
@@ -30,6 +31,16 @@ export default function BookSearch() {
     BooksAPI.update(book, shelf);
   };
 
+  useEffect(() => {
+    BooksAPI.getAll().then((data) => {
+      let temp = [];
+      Object.keys(data).map((one) => {
+        temp.push(data[one]);
+      });
+      setData(temp);
+    });
+  }, []);
+
   return (
     <div className="search-books">
       <div className="search-books-bar">
@@ -49,6 +60,7 @@ export default function BookSearch() {
         <ol className="books-grid">
           {books &&
             books.map((book) => {
+              let found = data.find((one) => one.id == book.id);
               return (
                 <li key={book.id}>
                   <div className="book">
@@ -67,7 +79,7 @@ export default function BookSearch() {
                         <select
                           onChange={(e) => onSelect(e, book)}
                           defaultValue={
-                            book.shelf !== undefined ? book.shelf : "none"
+                            found !== undefined ? found.shelf : "none"
                           }
                         >
                           <option value="move" disabled>
